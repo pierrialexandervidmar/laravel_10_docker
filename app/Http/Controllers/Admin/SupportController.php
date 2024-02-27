@@ -5,22 +5,24 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateSupport;
 use App\Models\Support;
+use App\Services\SupportService;
 use Illuminate\Http\Request;
 
 class SupportController extends Controller
 {
-    public function index(Support $support)
-    {
-        $supports = $support->all();
+    public function __construct(protected SupportService $service) {}
 
+    public function index(Request $request)
+    {
+        $supports = $this->service->getAll($request->filter);
         return view('admin/supports/index', compact('supports'));
     }
 
-    public function show(string|int $id)
+    public function show(string $id)
     {
         // Support::where('id', $id)->first();
         // Support::where('id', '!=', $id)->first();
-        if (!$support = Support::find($id))
+        if (!$support = $this->service->findOne($id))
         {
             return redirect()->back();
         }
@@ -44,9 +46,9 @@ class SupportController extends Controller
         return redirect()->route('supports.index');
     }
 
-    public function edit(Support $support, string|int $id)
+    public function edit(string $id)
     {
-        if (!$support = $support->where('id', $id)->first())
+        if (!$support = $this->service->findOne($id))
         {
             return redirect()->back();
         }
@@ -65,13 +67,9 @@ class SupportController extends Controller
         return redirect()->route('supports.index');
     }
 
-    public function destroy(Support $support, string|int $id)
+    public function destroy(string $id)
     {
-        if (!$support = $support->where('id', $id)->first())
-        {
-            return redirect()->back();
-        }
-        $support->delete();
+        $this->service->delete($id);
         return redirect()->route('supports.index');
     }
 }
