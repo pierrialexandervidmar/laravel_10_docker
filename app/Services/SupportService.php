@@ -2,15 +2,21 @@
 
 namespace App\Services;
 
+use App\DTO\CreateSupportDTO;
+use App\DTO\UpdateSupportDTO;
+use App\Models\Support;
+use App\Repositories\SupportRepositoryInterface;
+use GuzzleHttp\Promise\Create;
 use stdClass;
 
 class SupportService
 {
-    protected $repository;
+    protected SupportRepositoryInterface $repository;
 
-    public function __contruct()
-    {
-
+    public function __construct(
+        SupportRepositoryInterface $repository
+    ){
+        $this->repository = $repository;
     }
     public function getAll(string $filter = null): array
     {
@@ -22,19 +28,19 @@ class SupportService
         return $this->repository->findONe($id);
     }
 
-    public function new(string $subject, string $status, string $body): stdClass|null
+    public function new(CreateSupportDTO $dto): stdClass|null
     {
-        return $this->repository->new($subject, $status, $body);
+        return $this->repository->new($dto);
     }
 
-    public function update(string $id, string $subject, string $status, string $body): stdClass
+    public function update(UpdateSupportDTO $dto): stdClass
     {
-        return $this->repository->new($id, $subject, $status, $body);
+        return $this->repository->new($dto);
     }
 
     public function delete(string $id): void
     {
-        $this->repository->delte($id);
+        $this->repository->delete($id);
     }
 
 
