@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Repositories\SupportRepositoryInterface;
-use SupportEloquentORM;
+use App\Repositories\SupportEloquentORM;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
